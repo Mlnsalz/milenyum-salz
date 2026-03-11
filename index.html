@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena AI | Milenyumsalz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --accent: #8b5cf6;
+            --bg: #020617;
+            --card-bg: rgba(30, 41, 59, 0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            background: radial-gradient(circle at top right, #1e1b4b, #020617);
+            color: white;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Üst Başlık */
+        header {
+            padding: 20px;
+            text-align: center;
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: linear-gradient(to right, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Sohbet Alanı */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        #chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Mesaj Balonları */
+        .message {
+            max-width: 80%;
+            padding: 15px 20px;
+            border-radius: 20px;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            animation: slideUp 0.3s ease;
+        }
+
+        .ai-message {
+            align-self: flex-start;
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-bottom-left-radius: 2px;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-bottom-right-radius: 2px;
+        }
+
+        /* Hızlı Komutlar */
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .action-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #94a3b8;
+            padding: 8px 16px;
+            border-radius: 20px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.8rem;
+        }
+
+        .action-btn:hover { background: var(--primary); color: white; }
+
+        /* Giriş Alanı */
+        .input-wrapper {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 5px 15px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        button#send-btn {
+            background: white;
+            color: black;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        button#send-btn:hover { transform: scale(1.1); background: var(--primary); color: white; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Scrollbar */
+        #chat-container::-webkit-scrollbar { width: 4px; }
+        #chat-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-text">ATHENA AI PRO</div>
+    </header>
+
+    <main>
+        <div id="chat-container">
+            <div class="message ai-message">
+                Merhaba! Ben Milenyumsalz'ın çok fonksiyonlu asistanı Athena. 
+                <br><br>
+                Size bugün nasıl yardımcı olabilirim? Ödevlerinizi yapabilir, kod yazabilir veya sadece sohbet edebilirim.
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <button class="action-btn" onclick="quickAsk('Haftalık diyet listesi hazırla')">🥗 Diyet Listesi</button>
+            <button class="action-btn" onclick="quickAsk('Python ile yılan oyunu kodu yaz')">💻 Kod Yaz</button>
+            <button class="action-btn" onclick="quickAsk('Bugün için motivasyon ver')">🔥 Motivasyon</button>
+            <button class="action-btn" onclick="quickAsk('İngilizce pratik yapalım')">🇬🇧 Dil Öğren</button>
+        </div>
+
+        <div class="input-wrapper">
+            <input type="text" id="user-input" placeholder="Bir şey sorun veya bir görev verin..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <button id="send-btn" onclick="sendMessage()">→</button>
+        </div>
+    </main>
+
+    <script>
+        function sendMessage() {
+            const input = document.getElementById('user-input');
+            const chatContainer = document.getElementById('chat-container');
+            if (input.value.trim() === "") return;
+
+            // Kullanıcı Mesajı
+            appendMessage(input.value, 'user-message');
+            const userText = input.value;
+            input.value = "";
+
+            // Yapay Zeka Cevabı (Simülasyon)
+            setTimeout(() => {
+                const response = generateAIResponse(userText);
+                appendMessage(response, 'ai-message');
+            }, 800);
+        }
+
+        function appendMessage(text, className) {
+            const chatContainer = document.getElementById('chat-container');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${className}`;
+            msgDiv.innerHTML = text;
+            chatContainer.appendChild(msgDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function quickAsk(text) {
+            document.getElementById('user-input').value = text;
+            sendMessage();
+        }
+
+        // Athena'nın Zekası (Buraya Gerçek Bir API Bağlanabilir)
+        function generateAIResponse(input) {
+            const text = input.toLowerCase();
+            
+            if (text.includes("kod")) return "Elbette! İşte istediğin kodun taslağı:<br><pre style='background:#000; padding:10px; margin-top:10px; border-radius:5px;'>print('Milenyumsalz AI sistemine hoş geldiniz!')</pre>";
+            if (text.includes("diyet")) return "Sağlıklı bir yaşam için günlük 2 litre su ve bol protein odaklı bir beslenme öneririm. Detaylı bir liste hazırlamamı ister misiniz?";
+            if (text.includes("motivasyon")) return "Unutma, bugün attığın her küçük adım, yarınki büyük başarının temelidir. Kodlamaya devam et!";
+            
+            return "Bunu senin için araştırıyorum. Milenyumsalz veritabanında bu konuda geniş bir bilgi var. Başka ne öğrenmek istersin?";
+        }
+    </script>
+</body>
+</html>
